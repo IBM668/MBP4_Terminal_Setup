@@ -27,7 +27,7 @@ echo -e "${BOLD}═════════════════════�
 
 # ─── Step 1: Homebrew ────────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}[1/5] Homebrew${NC}"
+echo -e "${BOLD}[1/6] Homebrew${NC}"
 if ! command -v brew &>/dev/null; then
     info "未检测到 Homebrew，正在安装..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -41,7 +41,7 @@ fi
 
 # ─── Step 2: Starship ────────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}[2/5] Starship 提示符${NC}"
+echo -e "${BOLD}[2/6] Starship 提示符${NC}"
 if brew list starship &>/dev/null; then
     success "starship 已安装"
 else
@@ -52,7 +52,7 @@ fi
 
 # ─── Step 3: Zsh 插件 ────────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}[3/5] Zsh 插件（自动建议 / 语法高亮 / 补全）${NC}"
+echo -e "${BOLD}[3/6] Zsh 插件（自动建议 / 语法高亮 / 补全）${NC}"
 for plugin in zsh-autosuggestions zsh-syntax-highlighting zsh-completions; do
     if brew list "$plugin" &>/dev/null; then
         success "$plugin 已安装"
@@ -65,7 +65,7 @@ done
 
 # ─── Step 4: 字体 ────────────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}[4/5] MesloLGS NF 字体${NC}"
+echo -e "${BOLD}[4/6] MesloLGS NF 字体${NC}"
 if brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
     success "字体已安装"
 else
@@ -75,22 +75,27 @@ else
 fi
 warn "记得在 Otty 设置里把字体切换为 MesloLGS NF"
 
-# ─── Step 5: 部署配置文件 ─────────────────────────────────────────────
+# ─── Step 5: 部署前自动备份 ────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}[5/5] 部署配置文件${NC}"
+echo -e "${BOLD}[5/6] 部署前自动备份${NC}"
+if [[ -f ~/.zshrc || -f ~/.config/starship.toml ]]; then
+    if [[ -x "$SCRIPT_DIR/scripts/backup.sh" ]]; then
+        "$SCRIPT_DIR/scripts/backup.sh" "auto-before-setup" || warn "自动备份脚本执行失败，继续部署"
+    else
+        warn "未找到 scripts/backup.sh，跳过自动备份"
+    fi
+else
+    info "本机还没有旧配置，跳过备份"
+fi
+
+# ─── Step 6: 部署配置文件 ─────────────────────────────────────────────
+echo ""
+echo -e "${BOLD}[6/6] 部署配置文件${NC}"
 mkdir -p ~/.config
 
-if [[ -f ~/.zshrc ]] && ! diff -q "$CONFIGS_DIR/.zshrc" ~/.zshrc &>/dev/null; then
-    cp ~/.zshrc ~/.zshrc.bak.$(date +%s)
-    warn "已备份原 .zshrc"
-fi
 cp "$CONFIGS_DIR/.zshrc" ~/.zshrc
 success ".zshrc 已部署"
 
-if [[ -f ~/.config/starship.toml ]] && ! diff -q "$CONFIGS_DIR/starship.toml" ~/.config/starship.toml &>/dev/null; then
-    cp ~/.config/starship.toml ~/.config/starship.toml.bak.$(date +%s)
-    warn "已备份原 starship.toml"
-fi
 cp "$CONFIGS_DIR/starship.toml" ~/.config/starship.toml
 success "starship.toml 已部署"
 
@@ -104,3 +109,7 @@ fi
 
 echo ""
 echo -e "${BOLD}✅ 完成！${NC} 打开新的终端窗口 / Tab 即可生效。"
+if [[ -d "$SCRIPT_DIR/backups" ]]; then
+    echo "本次部署前的配置已备份到 backups/，别忘了提交:"
+    echo "  git add backups && git commit -m \"backup: auto-before-setup\" && git push"
+fi
