@@ -56,6 +56,28 @@ git add -A && git commit -m "update config"
 git push
 ```
 
+## 备份与恢复
+
+改配置前先存一份档：
+
+```bash
+./scripts/backup.sh zshstartship
+```
+
+会存到 `backups/20260606-zshstartship/`（日期自动生成，说明是你传的参数）。存完记得提交：
+
+```bash
+git add backups && git commit -m "backup: zshstartship" && git push
+```
+
+改坏了想恢复，跑：
+
+```bash
+./scripts/restore.sh
+```
+
+会列出所有备份，选编号即可一键恢复，恢复前还会自动把当前状态也存一份 `backups/<时间>-before-restore/` 防止选错。
+
 ## 目录结构
 
 MBP4_Terminal_Setup/
