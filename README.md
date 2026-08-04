@@ -1,15 +1,27 @@
 # 🍎 MBP4_Terminal_Setup
 
-个人 MacBook Pro (M4) 终端环境配置，一条命令搞定新机器上的 Shell 环境。
+Otty 终端下的一键 macOS 环境配置脚本：**Zsh + Starship + 语法高亮**。在新 Mac 上跑一次，几分钟内配好整套终端环境。
 
-只做一件事：**Zsh + Starship + 语法高亮**，不含 Ghostty / Fish / 额外 CLI 工具集，全部通过 Homebrew 安装，干净、可重复运行。终端用的是 [Otty](https://otty.app)，但配置文件跟终端无关，换终端也能直接用。
+<p align="center">
+  <img src="assets/otty.png" width="80" alt="Otty">
+  &nbsp;&nbsp;
+  <img src="assets/zsh.png" width="80" alt="Zsh">
+  &nbsp;&nbsp;
+  <img src="assets/starship.png" width="80" alt="Starship">
+</p>
+
+<p align="center">
+  <img src="assets/demo-2x.gif" width="600" alt="Demo">
+</p>
+
+> demo 动图来自原项目 terminal-setup，展示的是完整版终端效果（含 btop 等工具），本仓库只保留了 Zsh + Starship + 语法高亮这部分。
 
 ## 工具栈
 
 | 组件 | 说明 |
 |------|------|
 | **Zsh** | macOS 自带，不需要额外安装 shell 本体 |
-| **[Starship](https://starship.rs)** | 跨 Shell 提示符，配色用的 [Catppuccin Mocha](https://catppuccin.com/) |
+| **Starship** | 跨 Shell 提示符，配色用的 Catppuccin Mocha |
 | **zsh-autosuggestions** | 输入时灰色显示历史命令建议 |
 | **zsh-syntax-highlighting** | 命令语法高亮 |
 | **zsh-completions** | 补全增强 |
@@ -45,11 +57,22 @@ git push
 ```
 
 ## 目录结构
+
 MBP4_Terminal_Setup/
 
 ├── README.md
 
 ├── setup.sh
+
+├── assets/
+
+│   ├── otty.png
+
+│   ├── zsh.png
+
+│   ├── starship.png
+
+│   └── demo-2x.gif
 
 └── configs/
 
